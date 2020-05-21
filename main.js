@@ -1,23 +1,39 @@
-import ctr from './ctr';
+import express from "express";
+import { ERROR_MESSAGES } from "./helpers/validation";
+import { EVENT_NAME, PORT } from "./helpers/consts";
 
-const values = [8, 7, 6, 5, 4, 3.5, 3, 2.5, 2];
-const results = {
-    8: '1.40',
-    7: '1.35',
-    6: '1.30',
-    5: '1.20',
-    4: '1.15',
-    3.5: '1.10',
-    3: '1.05',
-    2.5: '1.02',
-    2: '1',
-};
+const app = express();
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
+const exphbs = require("express-handlebars");
 
-for (let n of values) {
-    const result = ctr(n, 1);
-    if (result !== results[n]) {
-        console.warn('FAIL!!! -- ', n, result);
-        break;
-    }
-    console.warn('SUCCESS -- ', n);
-}
+app.use("/static", express.static("static"));
+app.engine("handlebars", exphbs({ layoutsDir: "views", defaultLayout: null }));
+
+app.set("view engine", "handlebars");
+
+io.on("connection", (socket) => {
+  socket.on(EVENT_NAME, (color) => {
+    io.emit(EVENT_NAME, color);
+  });
+});
+
+app.get("/", (req, res) => {
+  const templateProperties = {
+    eventName: EVENT_NAME,
+    errors: {
+      repeated: ERROR_MESSAGES.repeated,
+      incorrect: ERROR_MESSAGES.incorrect,
+    },
+  };
+
+  res.render("index", templateProperties);
+});
+
+app.get("/color", (req, res) => {
+  res.render("color", { eventName: EVENT_NAME });
+});
+
+http.listen(PORT, () => {
+  console.log(`listening on ${PORT}`);
+});

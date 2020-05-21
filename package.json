@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "nodemon --exec babel-node main.js",
+    "start:dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,5 +15,10 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.6",
     "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.4",
+    "socket.io": "^2.3.0"
   }
 }

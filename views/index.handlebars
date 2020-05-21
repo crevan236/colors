@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pick a color</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap"
+      rel="stylesheet"
+    />
+    <link href="/static/styles.css" rel="stylesheet" />
+    <style>
+      form {
+        display: block;
+        width: 100px;
+        margin: 0 auto;
+      }
+      input {
+        width: calc(100% - 2px);
+        height: 50px;
+        padding: 0px;
+      }
+      button {
+        width: 100%;
+        margin-top: 12px;
+      }
+      .errorMessage {
+        display: block;
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <form id="colorForm" action="">
+          <input id="colorInput" autocomplete="off" type="color" /><button>
+            Change the color!
+          </button>
+        </form>
+        <span class="errorMessage"></span>
+      </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const showMessage = (element, message) => {
+        if (element instanceof HTMLElement) {
+          element.innerHTML = message;
+        }
+      };
+      const isHexadecimal = (color) =>
+        !!String(color).match(/^#([A-Fa-f0-9]{6})$/g);
+
+      const socket = io();
+      const form = document.querySelector("#colorForm");
+      const input = document.querySelector("#colorInput");
+      const errorBox = document.querySelector(".errorMessage");
+      const eventName = '{{ eventName }}';
+      let lastValue = '#ffffff';
+      input.value = lastValue;
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const pickedColor = input.value;
+
+        if (!isHexadecimal(pickedColor)) {
+          showMessage(
+            errorBox,
+            "{{ errors.incorrect }}"
+          );
+
+          return;
+        }
+
+        if (lastValue !== pickedColor) {
+          lastValue = pickedColor;
+          showMessage(errorBox, "");
+
+          socket.emit(eventName, pickedColor);
+        } else {
+          showMessage(errorBox, "{{ errors.repeated }}");
+        }
+      });
+    </script>
+  </body>
+</html>
