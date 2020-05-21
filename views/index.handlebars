@@ -44,14 +44,8 @@
       </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const showMessage = (element, message) => {
-        if (element instanceof HTMLElement) {
-          element.innerHTML = message;
-        }
-      };
-      const isHexadecimal = (color) =>
-        !!String(color).match(/^#([A-Fa-f0-9]{6})$/g);
+    <script type="module" >
+      import { isHexadecimal, showMessage } from '/static/validators.js';
 
       const socket = io();
       const form = document.querySelector("#colorForm");

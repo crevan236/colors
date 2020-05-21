@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --exec babel-node main.js",
     "start:dev": "nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watch"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "@babel/core": "^7.9.6",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.9.6",
+    "jest": "^26.0.1",
     "nodemon": "^2.0.4"
   },
   "dependencies": {
