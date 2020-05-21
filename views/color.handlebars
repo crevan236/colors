@@ -17,10 +17,9 @@
     <script>
       const socket = io();
       socket.on('{{ eventName }}', color => {
-        const container = document.querySelector('.container');
         const colorBox = document.querySelector('.pickedColor');
 
-        container.style.backgroundColor = color;
+        document.body.style.background = color;
         colorBox.innerHTML = color;
       });
     </script>
